@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solving Two-Step Linear Equations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:    #1b2d5b;
+      --teal:    #0ea5c8;
+      --amber:   #f59e0b;
+      --coral:   #f26c4f;
+      --mint:    #d1fae5;
+      --sky:     #e0f7fd;
+      --white:   #ffffff;
+      --offwhite:#f8fafc;
+      --text:    #1e293b;
+      --muted:   #64748b;
+      --radius:  14px;
+      --shadow:  0 4px 24px rgba(27,45,91,0.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--offwhite);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #2a4a8a 60%, #0ea5c8 100%);
+      color: white;
+      padding: 60px 24px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 50px;
+      padding: 5px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 5vw, 48px);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--amber); }
+    .hero p {
+      font-size: 17px;
+      opacity: .85;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .meta-chip {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── NAV ──────────────────────────────────────── */
+    .sticky-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .sticky-nav a {
+      color: rgba(255,255,255,.7);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 13px 18px;
+      white-space: nowrap;
+      transition: color .2s, background .2s;
+    }
+    .sticky-nav a:hover { color: white; background: rgba(255,255,255,.08); }
+
+    /* ── SECTION SHELL ───────────────────────────── */
+    .section {
+      max-width: 860px;
+      margin: 48px auto;
+      padding: 0 20px;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .section-label .num {
+      width: 36px; height: 36px;
+      background: var(--navy);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .section-label h2 {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--navy);
+    }
+    .section-label .time-badge {
+      margin-left: auto;
+      background: var(--sky);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 50px;
+      flex-shrink: 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    /* ── LEARNING GOAL ────────────────────────────── */
+    .goal-card {
+      background: linear-gradient(135deg, var(--teal), #0284a8);
+      color: white;
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+    .goal-card .icon { font-size: 38px; flex-shrink: 0; }
+    .goal-card h3 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: .8; margin-bottom: 6px; }
+    .goal-card p { font-size: 17px; font-weight: 700; line-height: 1.5; }
+
+    /* ── VOCAB CARDS ──────────────────────────────── */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+    .vocab-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .vocab-card:hover { transform: translateY(-3px); border-color: var(--teal); box-shadow: var(--shadow); }
+    .vocab-card .v-term {
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .vocab-card .v-def {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .vocab-card .v-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+
+    /* ── EQUATION STEPS ───────────────────────────── */
+    .eq-box {
+      background: var(--navy);
+      color: white;
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      font-family: 'Space Mono', monospace;
+      font-size: 18px;
+      line-height: 1.8;
+      margin: 14px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .eq-box::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 5px;
+      background: var(--amber);
+    }
+    .eq-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .eq-main { color: white; }
+    .eq-op   { color: var(--amber); font-weight: 700; }
+    .eq-note {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,.65);
+      font-style: italic;
+      margin-left: auto;
+    }
+    .eq-line {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,.25);
+      margin: 6px 0;
+    }
+    .eq-result { color: #6ee7b7; font-weight: 700; }
+
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--amber);
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      padding: 4px 12px;
+      border-radius: 50px;
+      margin-bottom: 10px;
+    }
+
+    .explain-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--amber);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #78350f;
+      margin: 10px 0 18px;
+    }
+
+    .check-box {
+      background: var(--mint);
+      border-left: 4px solid #10b981;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #065f46;
+      margin: 10px 0;
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ── STEPS VISUAL ─────────────────────────────── */
+    .steps-visual {
+      display: flex;
+      gap: 0;
+      margin: 20px 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .step-block {
+      flex: 1;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .step-block:nth-child(1) { background: #1b2d5b; }
+    .step-block:nth-child(2) { background: #2a4a8a; }
+    .step-block:nth-child(3) { background: #0ea5c8; }
+    .step-block .s-num {
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 6px;
+    }
+    .step-block .s-icon { font-size: 28px; margin-bottom: 8px; }
+    .step-block .s-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.35;
+    }
+    .step-block .s-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,.6);
+      margin-top: 4px;
+    }
+
+    /* ── GUIDED PRACTICE ──────────────────────────── */
+    .reveal-btn {
+      background: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 22px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      margin-top: 12px;
+    }
+    .reveal-btn:hover { background: #0284a8; transform: translateY(-1px); }
+    .hidden { display: none; }
+
+    .question-prompt {
+      background: #f0f9ff;
+      border: 2px dashed var(--teal);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 14px 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .question-prompt span { color: var(--teal); }
+
+    /* ── QUIZ ─────────────────────────────────────── */
+    .quiz-problem {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+    .quiz-problem.correct { border-color: #10b981; background: #f0fdf4; }
+    .quiz-problem.incorrect { border-color: var(--coral); background: #fff1ee; }
+    .quiz-eq {
+      font-family: 'Space Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .quiz-opt {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+    }
+    .quiz-opt:hover { border-color: var(--teal); background: var(--sky); }
+    .quiz-opt.correct-ans { border-color: #10b981; background: #d1fae5; color: #065f46; }
+    .quiz-opt.wrong-ans   { border-color: var(--coral); background: #fee2e2; color: #991b1b; }
+    .quiz-opt.disabled    { pointer-events: none; opacity: .6; }
+    .quiz-feedback {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      display: none;
+    }
+    .quiz-feedback.show { display: block; }
+
+    .score-box {
+      background: linear-gradient(135deg, var(--navy), #2a4a8a);
+      color: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-big { font-size: 52px; font-weight: 900; color: var(--amber); }
+    .score-label { font-size: 16px; opacity: .8; margin-top: 4px; }
+
+    /* ── VIDEO ────────────────────────────────────── */
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .video-wrap iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+    .video-caption {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ── RESOURCES ────────────────────────────────── */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 16px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 14px;
+      transition: all .2s;
+    }
+    .resource-link:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .resource-link .r-icon { font-size: 26px; flex-shrink: 0; }
+    .resource-link .r-src { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+    /* ── EXIT TICKET ──────────────────────────────── */
+    .ticket-form {
+      background: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .ticket-q {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .ticket-input {
+      width: 100%;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      resize: vertical;
+      margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+    .ticket-input:focus { outline: none; border-color: var(--teal); }
+    .submit-btn {
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 28px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .submit-btn:hover { background: var(--teal); }
+    .submit-thanks {
+      display: none;
+      background: var(--mint);
+      border-radius: var(--radius);
+      padding: 22px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 800;
+      color: #065f46;
+    }
+    .submit-thanks.show { display: block; }
+
+    /* ── CLOSURE ──────────────────────────────────── */
+    .closure-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .closure-q {
+      background: white;
+      border-left: 4px solid var(--amber);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      box-shadow: var(--shadow);
+    }
+
+    /* ── DIVIDER ──────────────────────────────────── */
+    .section-divider {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 20px;
+      border: none;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.6);
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      margin-top: 60px;
+    }
+    footer strong { color: white; }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media(max-width: 600px) {
+      .steps-visual { flex-direction: column; }
+      .closure-grid { grid-template-columns: 1fr; }
+      .quiz-options  { grid-template-columns: 1fr 1fr; }
+      .vocab-grid    { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ████ HERO ████ -->
+<header class="hero" role="banner">
+  <div class="hero-badge">🧮 7th–8th Grade Math · RSP Small Group</div>
+  <h1>Solving <span>Two-Step</span><br>Linear Equations</h1>
+  <p>Using inverse operations to isolate the variable — step by step.</p>
+  <div class="hero-meta">
+    <span class="meta-chip">⏱ 25 Minutes</span>
+    <span class="meta-chip">📐 Algebra Ready</span>
+    <span class="meta-chip">✅ CalTPA Aligned</span>
+  </div>
+</header>
+
+<!-- ████ NAV ████ -->
+<nav class="sticky-nav" aria-label="Lesson sections">
+  <a href="#goal">Learning Goal</a>
+  <a href="#vocab">Vocabulary</a>
+  <a href="#review">Prior Knowledge</a>
+  <a href="#model">Modeling</a>
+  <a href="#guided">Guided Practice</a>
+  <a href="#independent">Independent</a>
+  <a href="#video">Watch It</a>
+  <a href="#quiz">Self-Check</a>
+  <a href="#closure">Closure</a>
+  <a href="#resources">Resources</a>
+</nav>
+
+
+<!-- ████ LEARNING GOAL ████ -->
+<section id="goal" class="section" aria-labelledby="goal-heading">
+  <div class="section-label">
+    <div class="num" aria-hidden="true">🎯</div>
+    <h2 id="goal-heading">Today's Learning Goal</h2>
+  </div>
+  <div class="goal-card" role="region" aria-label="Learning goal">
+    <div class="icon" aria-hidden="true">💡</div>
+    <div>
+      <h3>Student-Friendly Goal</h3>
+      <p>"Today we will learn how to solve two-step equations by using <strong>inverse operations</strong> to isolate the variable."</p>
+    </div>
+  </div>
+
+  <div class="steps-visual" role="list" aria-label="Three steps to solving equations">
+    <div class="step-block" role="listitem">
+      <div class="s-num">Step 1</div>
+      <div class="s-icon" aria-hidden="true">➕➖</div>
+      <div class="s-text">Undo Addition or Subtraction</div>
+      <div class="s-sub">Address the constant first</div>
+    </div>
+    <div class="step-block" role="listitem">
+      <div class="s-num">Step 2</div>
+      <div class="s-icon" aria-hidden="true">✖️➗</div>
+      <div class="s-text">Undo Multiplication or Division</div>
+      <div class="s-sub">Isolate the variable</div>
+    </div>
+    <div class="step-block" role="listitem">
+      <div class="s-num">Step 3</div>
+      <div class="s-icon" aria-hidden="true">✅</div>
+      <div class="s-text">Check Your Answer</div>
+      <div class="s-sub">Substitute back in</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ VOCABULARY ████ -->
+<section id="vocab" class="section" aria-labelledby="vocab-heading">
+  <div class="section-label">
+    <div class="num" aria-hidden="true">📖</div>
+    <h2 id="vocab-heading">Key Vocabulary</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:18px;font-size:14px;">Review each word before we begin. Say each one out loud!</p>
+  <div class="vocab-grid" role="list">
+    <div class="vocab-card" role="listitem" tabindex="0" aria-label="Equation: a mathematical statement showing two expressions are equal">
+      <span class="v-icon" aria-hidden="true">⚖️</span>
+      <div class="v-term">Equation</div>
+      <div class="v-def">A mathematical statement showing two expressions are equal, using an = sign.</div>
+    </div>
+    <div class="vocab-card" role="listitem" tabindex="0" aria-label="Variable: a letter that represents an unknown number">
+      <span class="v-icon" aria-hidden="true">🔤</span>
+      <div class="v-term">Variable</div>
+      <div class="v-def">A letter (like x or y) that represents an unknown number we're solving for.</div>
+    </div>
+    <div class="vocab-card" role="listitem" tabindex="0" aria-label="Inverse Operation: the opposite math operation that undoes another">
+      <span class="v-icon" aria-hidden="true">🔄</span>
+      <div class="v-term">Inverse Operation</div>
+      <div class="v-def">The opposite math operation — addition undoes subtraction, multiplication undoes division.</div>
+    </div>
+    <div class="vocab-card" role="listitem" tabindex="0" aria-label="Isolate the Variable: get the variable alone on one side">
+      <span class="v-icon" aria-hidden="true">🎯</span>
+      <div class="v-term">Isolate the Variable</div>
+      <div class="v-def">Get the variable alone on one side of the equation by itself.</div>
+    </div>
+    <div class="vocab-card" role="listitem" tabindex="0" aria-label="Solution: the value that makes the equation true">
+      <span class="v-icon" aria-hidden="true">💎</span>
+      <div class="v-term">Solution</div>
+      <div class="v-def">The value of the variable that makes the equation true.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ PRIOR KNOWLEDGE ████ -->
+<section id="review" class="section" aria-labelledby="review-heading">
+  <div class="section-label">
+    <div class="num">1</div>
+    <h2 id="review-heading">Introduction &amp; Prior Knowledge</h2>
+    <span class="time-badge">⏱ 3–4 min</span>
+  </div>
+
+  <div class="card">
+    <p style="font-size:15px;margin-bottom:16px;">Let's warm up with a <strong>one-step equation</strong> you already know how to solve:</p>
+
+    <div class="question-prompt">
+      🤔 Teacher asks: <span>"What is the variable in this equation? What operation is happening to x?"</span>
+    </div>
+
+    <div class="eq-box" role="math" aria-label="x minus 9 equals 28, solve by adding 9 to both sides">
+      <div class="eq-row"><span class="eq-main">x − 9 = 28</span><span class="eq-note">start here</span></div>
+      <hr class="eq-line">
+      <div class="eq-row"><span class="eq-main">x − 9 </span><span class="eq-op">+ 9</span><span class="eq-main"> = 28 </span><span class="eq-op">+ 9</span><span class="eq-note">undo subtraction → add 9</span></div>
+      <hr class="eq-line">
+      <div class="eq-row"><span class="eq-result">x = 37</span><span class="eq-note">✓ solution</span></div>
+    </div>
+
+    <div class="explain-box" role="note">
+      💬 <strong>Teacher says:</strong> "Great! That was a one-step equation. Today we will solve <em>two-step equations</em>, which require two inverse operations."
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ TEACHER MODELING ████ -->
+<section id="model" class="section" aria-labelledby="model-heading">
+  <div class="section-label">
+    <div class="num">2</div>
+    <h2 id="model-heading">Teacher Modeling</h2>
+    <span class="time-badge">⏱ 6–7 min</span>
+  </div>
+
+  <div class="card">
+    <p style="font-size:15px;margin-bottom:18px;">Watch carefully as we solve this equation using <strong>inverse operations</strong>. Notice every step!</p>
+
+    <div class="question-prompt">
+      🤔 Teacher asks: <span>"What operations are happening to the variable x in this equation?"</span>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-pill" aria-label="Step 1">📌 Step 1 — Undo Addition</div>
+    <div class="eq-box" role="math" aria-label="3x plus 10 equals 28, subtract 10 from both sides to get 3x equals 18">
+      <div class="eq-row"><span class="eq-main">3x + 10 = 28</span></div>
+      <div class="eq-row"><span class="eq-main">3x + 10 </span><span class="eq-op">− 10</span><span class="eq-main"> = 28 </span><span class="eq-op">− 10</span></div>
+      <hr class="eq-line">
+      <div class="eq-row"><span class="eq-result">3x = 18</span></div>
+    </div>
+    <div class="explain-box">"First we subtract 10 from both sides because <strong>+10</strong> is happening to the x side. Subtraction undoes addition."</div>
+
+    <!-- Step 2 -->
+    <div class="step-pill" aria-label="Step 2">📌 Step 2 — Undo Multiplication</div>
+    <div class="eq-box" role="math" aria-label="3x equals 18, divide both sides by 3 to get x equals 6">
+      <div class="eq-row"><span class="eq-main">3x = 18</span></div>
+      <div class="eq-row"><span class="eq-main">3x </span><span class="eq-op">÷ 3</span><span class="eq-main"> = 18 </span><span class="eq-op">÷ 3</span></div>
+      <hr class="eq-line">
+      <div class="eq-row"><span class="eq-result">x = 6</span></div>
+    </div>
+    <div class="explain-box">"Now we divide both sides by 3 to undo the multiplication. The variable x is now isolated!"</div>
+
+    <!-- Step 3 Check -->
+    <div class="step-pill" aria-label="Step 3">✅ Step 3 — Check the Answer</div>
+    <div class="check-box" role="math" aria-label="Check: 3 times 6 plus 10 equals 18 plus 10 equals 28. Correct!">
+      3(6) + 10 = 28<br>
+      18 + 10 = 28<br>
+      28 = 28 ✓ Our solution is correct!
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ GUIDED PRACTICE ████ -->
+<section id="guided" class="section" aria-labelledby="guided-heading">
+  <div class="section-label">
+    <div class="num">3</div>
+    <h2 id="guided-heading">Guided Practice</h2>
+    <span class="time-badge">⏱ 7–8 min</span>
+  </div>
+
+  <div class="card">
+    <p style="font-size:15px;margin-bottom:16px;">Now <strong>you help solve</strong> this equation with your teacher. Think through each step before looking at the answer!</p>
+
+    <div class="question-prompt">
+      🤔 <span>"What should we undo first? What operation is happening to y?"</span>
+    </div>
+
+    <div class="eq-box" role="math" aria-label="Solve: 9y minus 12 equals 15">
+      <div class="eq-row"><span class="eq-main">9y − 12 = 15</span><span class="eq-note">solve together!</span></div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealStep('step-g1')" aria-expanded="false" aria-controls="step-g1">
+      👁 Reveal Step 1
+    </button>
+
+    <div id="step-g1" class="hidden" aria-live="polite">
+      <div class="step-pill">Step 1 — Undo Subtraction</div>
+      <div class="eq-box" role="math" aria-label="Add 12 to both sides: 9y minus 12 plus 12 equals 15 plus 12, giving 9y equals 27">
+        <div class="eq-row"><span class="eq-main">9y − 12 </span><span class="eq-op">+ 12</span><span class="eq-main"> = 15 </span><span class="eq-op">+ 12</span></div>
+        <hr class="eq-line">
+        <div class="eq-row"><span class="eq-result">9y = 27</span></div>
+      </div>
+      <div class="explain-box">"We added 12 to both sides because subtraction is happening. Addition is the inverse of subtraction."</div>
+
+      <div class="question-prompt">
+        🤔 <span>"Why do we divide by 9 next? What is our solution?"</span>
+      </div>
+
+      <button class="reveal-btn" onclick="revealStep('step-g2')" aria-expanded="false" aria-controls="step-g2">
+        👁 Reveal Step 2
+      </button>
+
+      <div id="step-g2" class="hidden" aria-live="polite">
+        <div class="step-pill">Step 2 — Undo Multiplication</div>
+        <div class="eq-box" role="math" aria-label="Divide both sides by 9: 9y divided by 9 equals 27 divided by 9, giving y equals 3">
+          <div class="eq-row"><span class="eq-main">9y </span><span class="eq-op">÷ 9</span><span class="eq-main"> = 27 </span><span class="eq-op">÷ 9</span></div>
+          <hr class="eq-line">
+          <div class="eq-row"><span class="eq-result">y = 3</span></div>
+        </div>
+        <div class="check-box" role="math" aria-label="Check: 9 times 3 minus 12 equals 27 minus 12 equals 15. Correct!">
+          Check: 9(3) − 12 = 27 − 12 = 15 ✓
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ INDEPENDENT PRACTICE ████ -->
+<section id="independent" class="section" aria-labelledby="ind-heading">
+  <div class="section-label">
+    <div class="num">4</div>
+    <h2 id="ind-heading">Independent Practice</h2>
+    <span class="time-badge">⏱ 6–7 min</span>
+  </div>
+
+  <div class="card">
+    <p style="font-size:15px;margin-bottom:6px;">Solve each equation step by step. Show all your work on paper.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">For each problem, ask yourself: <em>What do I undo first? What inverse operation do I use?</em></p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px;">
+      <!-- Problem 1 -->
+      <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Problem 1</div>
+        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--navy);">4x + 5 = 17</div>
+      </div>
+      <!-- Problem 2 -->
+      <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Problem 2</div>
+        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--navy);">6x − 8 = 16</div>
+      </div>
+      <!-- Problem 3 -->
+      <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Problem 3</div>
+        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--navy);">2x + 12 = 22</div>
+      </div>
+      <!-- Problem 4 -->
+      <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Problem 4</div>
+        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--navy);">5x − 15 = 10</div>
+      </div>
+    </div>
+
+    <button class="reveal-btn" onclick="revealStep('ws-answers')" aria-expanded="false" aria-controls="ws-answers">
+      👁 Check Answers When Done
+    </button>
+    <div id="ws-answers" class="hidden" style="margin-top:16px;" aria-live="polite">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;">
+        <div class="check-box" role="math" aria-label="Problem 1 answer: x equals 3">Problem 1: <strong>x = 3</strong></div>
+        <div class="check-box" role="math" aria-label="Problem 2 answer: x equals 4">Problem 2: <strong>x = 4</strong></div>
+        <div class="check-box" role="math" aria-label="Problem 3 answer: x equals 5">Problem 3: <strong>x = 5</strong></div>
+        <div class="check-box" role="math" aria-label="Problem 4 answer: x equals 5">Problem 4: <strong>x = 5</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ VIDEO ████ -->
+<section id="video" class="section" aria-labelledby="video-heading">
+  <div class="section-label">
+    <div class="num" aria-hidden="true">🎬</div>
+    <h2 id="video-heading">Watch It in Action</h2>
+  </div>
+  <div class="card">
+    <p style="font-size:15px;margin-bottom:18px;">Click to watch these videos for a clear explanation of solving two-step equations:</p>
+
+    <a href="https://www.youtube.com/watch?v=LDIiYKYvvdA" target="_blank" rel="noopener noreferrer"
+       style="display:flex;align-items:center;gap:18px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:var(--radius);padding:20px;text-decoration:none;color:var(--text);margin-bottom:14px;transition:all .2s;"
+       onmouseover="this.style.borderColor='#0ea5c8';this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.borderColor='#e2e8f0';this.style.transform='translateY(0)'"
+       aria-label="Watch Math Antics: Solving 2-Step Equations on YouTube - opens in new tab">
+      <div style="width:64px;height:64px;background:#ff0000;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:28px;">▶️</div>
+      <div>
+        <div style="font-weight:800;font-size:15px;color:#1b2d5b;margin-bottom:4px;">Algebra Basics: Solving 2-Step Equations</div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:6px;">Math Antics · YouTube</div>
+        <div style="display:inline-block;background:#e0f7fd;color:#0ea5c8;font-size:12px;font-weight:700;padding:3px 10px;border-radius:50px;">▶ Watch Video →</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=_y_Q3_B2Vh8" target="_blank" rel="noopener noreferrer"
+       style="display:flex;align-items:center;gap:18px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:var(--radius);padding:20px;text-decoration:none;color:var(--text);transition:all .2s;"
+       onmouseover="this.style.borderColor='#0ea5c8';this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.borderColor='#e2e8f0';this.style.transform='translateY(0)'"
+       aria-label="Watch Khan Academy: Solving Two-Step Equations on YouTube - opens in new tab">
+      <div style="width:64px;height:64px;background:#14a800;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:28px;">🎓</div>
+      <div>
+        <div style="font-weight:800;font-size:15px;color:#1b2d5b;margin-bottom:4px;">Solving Two-Step Equations</div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:6px;">Khan Academy · YouTube</div>
+        <div style="display:inline-block;background:#e0f7fd;color:#0ea5c8;font-size:12px;font-weight:700;padding:3px 10px;border-radius:50px;">▶ Watch Video →</div>
+      </div>
+    </a>
+
+    <p class="video-caption" style="margin-top:14px;">📺 Closed captions available on both videos via YouTube's CC button.</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ SELF-CHECK QUIZ ████ -->
+<section id="quiz" class="section" aria-labelledby="quiz-heading">
+  <div class="section-label">
+    <div class="num" aria-hidden="true">🧩</div>
+    <h2 id="quiz-heading">Self-Check Quiz</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:18px;font-size:14px;padding:0 0 0 0;">Choose the correct solution for each equation.</p>
+
+  <!-- Q1 -->
+  <div class="quiz-problem" id="qp-1" role="group" aria-labelledby="q1-label">
+    <div class="quiz-eq" id="q1-label" aria-label="Question 1: solve 2x plus 6 equals 14">2x + 6 = 14</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkAnswer(this,1,'wrong')"  aria-label="x equals 10">x = 10</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,1,'correct')" aria-label="x equals 4">x = 4</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,1,'wrong')"  aria-label="x equals 7">x = 7</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,1,'wrong')"  aria-label="x equals 2">x = 2</button>
+    </div>
+    <div class="quiz-feedback" id="qfb-1" aria-live="polite"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-problem" id="qp-2" role="group" aria-labelledby="q2-label">
+    <div class="quiz-eq" id="q2-label" aria-label="Question 2: solve 5x minus 10 equals 15">5x − 10 = 15</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkAnswer(this,2,'wrong')"  aria-label="x equals 1">x = 1</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,2,'wrong')"  aria-label="x equals 6">x = 6</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,2,'correct')" aria-label="x equals 5">x = 5</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,2,'wrong')"  aria-label="x equals 2">x = 2</button>
+    </div>
+    <div class="quiz-feedback" id="qfb-2" aria-live="polite"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-problem" id="qp-3" role="group" aria-labelledby="q3-label">
+    <div class="quiz-eq" id="q3-label" aria-label="Question 3: solve 3x plus 9 equals 21">3x + 9 = 21</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="checkAnswer(this,3,'wrong')"  aria-label="x equals 10">x = 10</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,3,'wrong')"  aria-label="x equals 3">x = 3</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,3,'wrong')"  aria-label="x equals 6">x = 6</button>
+      <button class="quiz-opt" onclick="checkAnswer(this,3,'correct')" aria-label="x equals 4">x = 4</button>
+    </div>
+    <div class="quiz-feedback" id="qfb-3" aria-live="polite"></div>
+  </div>
+
+  <div class="score-box" id="final-score" role="status" aria-live="polite">
+    <div class="score-big" id="score-num">0/3</div>
+    <div class="score-label" id="score-msg"></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ LESSON CLOSURE ████ -->
+<section id="closure" class="section" aria-labelledby="closure-heading">
+  <div class="section-label">
+    <div class="num">5</div>
+    <h2 id="closure-heading">Lesson Closure</h2>
+    <span class="time-badge">⏱ 2 min</span>
+  </div>
+
+  <div class="card">
+    <p style="font-size:15px;margin-bottom:18px;">Think about what you learned. Be ready to answer these questions:</p>
+    <div class="closure-grid" role="list">
+      <div class="closure-q" role="listitem">💬 "What is the <strong>first step</strong> in solving a two-step equation?"</div>
+      <div class="closure-q" role="listitem">💬 "Why do we use <strong>inverse operations</strong>?"</div>
+    </div>
+
+    <div style="background:#f0f9ff;border-radius:var(--radius);padding:20px;margin-top:18px;">
+      <div style="font-size:12px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">📣 Student Summary Example</div>
+      <p style="font-size:15px;font-weight:700;color:var(--navy);">"First we undo addition or subtraction, then we undo multiplication or division."</p>
+    </div>
+
+    <div class="explain-box" style="margin-top:16px;">
+      🔗 <strong>Connection to Standards:</strong> "Today we are solving linear equations in one variable, which is part of our algebra learning (CA Common Core 7.EE.B.4)."
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ EXIT TICKET ████ -->
+<section id="exit-ticket" class="section" aria-labelledby="ticket-heading">
+  <div class="section-label">
+    <div class="num" aria-hidden="true">🎟️</div>
+    <h2 id="ticket-heading">Exit Ticket</h2>
+  </div>
+
+  <div class="ticket-form" id="ticket-form-wrap" role="form" aria-label="Exit ticket form">
+    <div class="ticket-q">1. Solve: <span style="font-family:'Space Mono',monospace;">4x + 3 = 19</span>  — show your steps.</div>
+    <textarea class="ticket-input" rows="3" placeholder="Write your steps here: Step 1... Step 2... Solution..." aria-label="Your work for problem 1"></textarea>
+
+    <div class="ticket-q">2. In your own words, why do we use inverse operations?</div>
+    <textarea class="ticket-input" rows="2" placeholder="In my own words..." aria-label="Your explanation of inverse operations"></textarea>
+
+    <div class="ticket-q">3. How confident do you feel about two-step equations today?</div>
+    <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;" role="radiogroup" aria-label="Confidence level">
+      <label style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;cursor:pointer;">
+        <input type="radio" name="confidence" value="1" style="accent-color:var(--teal);"> 😕 Still confused
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;cursor:pointer;">
+        <input type="radio" name="confidence" value="2" style="accent-color:var(--teal);"> 🤔 Getting there
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;cursor:pointer;">
+        <input type="radio" name="confidence" value="3" style="accent-color:var(--teal);"> 😊 I got it!
+      </label>
+    </div>
+
+    <button class="submit-btn" onclick="submitTicket()" aria-label="Submit exit ticket">Submit Exit Ticket ✉️</button>
+  </div>
+  <div class="submit-thanks" id="ticket-thanks" role="status" aria-live="polite">
+    🎉 Great work today! Your exit ticket has been noted. Keep practicing — you're building real algebra skills!
+  </div>
+</section>
+
+<hr class="section-divider">
+
+
+<!-- ████ RESOURCES ████ -->
+<section id="resources" class="section" aria-labelledby="res-heading">
+  <div class="section-label">
+    <div class="num" aria-hidden="true">🔗</div>
+    <h2 id="res-heading">Extra Resources</h2>
+  </div>
+  <div class="resource-grid" role="list">
+    <a class="resource-link" href="https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-variables-expressions/cc-7th-2-step-equations/v/why-we-do-the-same-thing-to-both-sides-two-step-equations" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Khan Academy: Two-Step Equations video lesson - opens in new tab">
+      <span class="r-icon" aria-hidden="true">🎓</span>
+      <div>
+        <div>Two-Step Equations</div>
+        <div class="r-src">Khan Academy</div>
+      </div>
+    </a>
+    <a class="resource-link" href="https://www.mathgames.com/skill/7.47-solve-two-step-linear-equations" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Math Games: Practice solving equations - opens in new tab">
+      <span class="r-icon" aria-hidden="true">🎮</span>
+      <div>
+        <div>Practice Equations</div>
+        <div class="r-src">Math Games</div>
+      </div>
+    </a>
+    <a class="resource-link" href="https://www.ixl.com/math/grade-7/solve-two-step-equations" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="IXL: Solve Two-Step Equations practice - opens in new tab">
+      <span class="r-icon" aria-hidden="true">📝</span>
+      <div>
+        <div>IXL Practice</div>
+        <div class="r-src">Grade 7 Algebra</div>
+      </div>
+    </a>
+    <a class="resource-link" href="https://www.desmos.com/calculator" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Desmos Graphing Calculator - opens in new tab">
+      <span class="r-icon" aria-hidden="true">📈</span>
+      <div>
+        <div>Desmos Calculator</div>
+        <div class="r-src">Check Your Solutions</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+
+<!-- ████ FOOTER ████ -->
+<footer role="contentinfo">
+  <strong>Solving Two-Step Linear Equations</strong> · 7th–8th Grade RSP · Created with EDU 207
+  <br>Aligned to <strong>CA CCSS 7.EE.B.4</strong> · CalTPA Teaching Plan
+</footer>
+
+
+<script>
+  /* ── Reveal toggle ─────────────────────────────── */
+  function revealStep(id) {
+    const el = document.getElementById(id);
+    const btn = document.querySelector(`[aria-controls="${id}"]`);
+    el.classList.remove('hidden');
+    if (btn) {
+      btn.setAttribute('aria-expanded', 'true');
+      btn.style.display = 'none';
+    }
+  }
+
+  /* ── Quiz logic ────────────────────────────────── */
+  let scores = {1: null, 2: null, 3: null};
+
+  function checkAnswer(btn, q, result) {
+    if (scores[q] !== null) return; // already answered
+    const allOpts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+    const fb = document.getElementById('qfb-' + q);
+    const panel = document.getElementById('qp-' + q);
+
+    allOpts.forEach(o => o.classList.add('disabled'));
+
+    if (result === 'correct') {
+      btn.classList.add('correct-ans');
+      panel.classList.add('correct');
+      fb.textContent = '✅ Correct! Great algebraic thinking!';
+      fb.style.color = '#065f46';
+      scores[q] = 1;
+    } else {
+      btn.classList.add('wrong-ans');
+      panel.classList.add('incorrect');
+      // Highlight correct
+      allOpts.forEach(o => { if (o.getAttribute('onclick').includes("'correct'")) o.classList.add('correct-ans'); });
+      fb.textContent = '❌ Not quite — the highlighted answer is correct. Review the steps!';
+      fb.style.color = '#991b1b';
+      scores[q] = 0;
+    }
+    fb.classList.add('show');
+
+    // Check if all answered
+    if (Object.values(scores).every(v => v !== null)) showScore();
+  }
+
+  function showScore() {
+    const total = Object.values(scores).reduce((a,b) => a+b, 0);
+    const box = document.getElementById('final-score');
+    const num = document.getElementById('score-num');
+    const msg = document.getElementById('score-msg');
+    num.textContent = total + '/3';
+    const msgs = ['Keep practicing — review the steps above!', 'Good effort! Review the step you missed.', 'Perfect score! You\'ve got this! 🌟'];
+    msg.textContent = msgs[total];
+    box.classList.add('show');
+    box.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  /* ── Exit ticket ───────────────────────────────── */
+  function submitTicket() {
+    document.getElementById('ticket-form-wrap').style.display = 'none';
+    document.getElementById('ticket-thanks').classList.add('show');
+    document.getElementById('ticket-thanks').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+</script>
+
+</body>
+</html>
